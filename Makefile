@@ -1,4 +1,4 @@
-SKILL_NAME := eval-hub
+SKILL_NAME := evalhub
 SKILL_DIR  := $(CURDIR)/$(SKILL_NAME)
 TARGET_DIR := $(HOME)/.claude/skills/$(SKILL_NAME)
 

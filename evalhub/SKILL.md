@@ -1,5 +1,5 @@
 ---
-name: eval-hub
+name: evalhub
 description: "Use when evaluating AI/ML models, running benchmarks, checking evaluation status, listing providers or collections, or performing model quality and safety assessments. Covers EvalHub provider discovery, benchmark execution, job lifecycle, and Evaluation-Driven Development (EDD) workflows."
 user-invocable: true
 ---
@@ -40,8 +40,8 @@ Providers and collections expose structured agent metadata via the API. Use thes
 
 ```bash
 # Run BOTH in parallel — this is the default starting point
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --agent 2>/dev/null
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py --agent 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --agent 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py --agent 2>/dev/null
 ```
 
 The `--agent` output contains the COMPLETE agent metadata block for every provider/collection (evaluates, target_type, summary, recommended_when, hints, result_interpretation, complements). Do not make additional calls to fetch individual providers — everything you need is already in this output.
@@ -49,15 +49,15 @@ The `--agent` output contains the COMPLETE agent metadata block for every provid
 **Only add filters when the user's intent clearly maps to one:**
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --target-type agent 2>/dev/null
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --evaluates safety 2>/dev/null
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py --evaluates safety 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --target-type agent 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --evaluates safety 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py --evaluates safety 2>/dev/null
 ```
 
 **Fetch a single provider only when the user explicitly asks for its benchmark list:**
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py PROVIDER_ID 2>/dev/null
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py PROVIDER_ID 2>/dev/null
 ```
 
 ### How to Use Agent Metadata
@@ -93,35 +93,35 @@ When the user asks to evaluate something:
 ### Check Health
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_check.py
+uv run ~/.claude/skills/evalhub/scripts/evalhub_check.py
 ```
 
 ### List Providers
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py                  # summary with evaluates, target_type
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py PROVIDER_ID      # single provider full details
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --agent          # full agent metadata
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --benchmarks     # all benchmarks
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --target-type model
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --evaluates safety
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py                  # summary with evaluates, target_type
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py PROVIDER_ID      # single provider full details
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --agent          # full agent metadata
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --benchmarks     # all benchmarks
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --target-type model
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --evaluates safety
 ```
 
 ### List Benchmarks
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --benchmarks
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --benchmarks --provider PROVIDER_ID
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py --benchmarks --category CATEGORY
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --benchmarks
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --benchmarks --provider PROVIDER_ID
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py --benchmarks --category CATEGORY
 ```
 
 ### List Collections
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py COLLECTION_ID
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py --agent
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py --evaluates CAPABILITY
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py COLLECTION_ID
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py --agent
+uv run ~/.claude/skills/evalhub/scripts/evalhub_collections.py --evaluates CAPABILITY
 ```
 
 ### Create an Evaluation Job
@@ -129,7 +129,7 @@ uv run ~/.claude/skills/eval-hub/scripts/evalhub_collections.py --evaluates CAPA
 With individual benchmarks (discover provider and benchmark IDs first):
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_eval.py \
+uv run ~/.claude/skills/evalhub/scripts/evalhub_eval.py \
   --model-url http://model-server:8000/v1 \
   --model-name my-model \
   --provider PROVIDER_ID \
@@ -139,7 +139,7 @@ uv run ~/.claude/skills/eval-hub/scripts/evalhub_eval.py \
 With a collection:
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_eval.py \
+uv run ~/.claude/skills/evalhub/scripts/evalhub_eval.py \
   --model-url http://model-server:8000/v1 \
   --model-name my-model \
   --collection COLLECTION_ID
@@ -148,7 +148,7 @@ uv run ~/.claude/skills/eval-hub/scripts/evalhub_eval.py \
 From a JSON file:
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_eval.py --json request.json
+uv run ~/.claude/skills/evalhub/scripts/evalhub_eval.py --json request.json
 ```
 
 Optional flags: `--name`, `--tag`, `--num-examples N`, `--threshold 0.7`, `--experiment-name`, `--queue`.
@@ -156,9 +156,9 @@ Optional flags: `--name`, `--tag`, `--num-examples N`, `--threshold 0.7`, `--exp
 ### Get Job Status
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py JOB_ID
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py JOB_ID --wait
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py JOB_ID --wait --timeout 600
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py JOB_ID
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py JOB_ID --wait
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py JOB_ID --wait --timeout 600
 ```
 
 Job states: `pending` -> `running` -> `completed` | `failed` | `cancelled` | `partially_failed`.
@@ -166,20 +166,20 @@ Job states: `pending` -> `running` -> `completed` | `failed` | `cancelled` | `pa
 ### List Jobs
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py --list
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py --list --status running
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py --list
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py --list --status running
 ```
 
 ### Get Job Logs
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_logs.py JOB_ID
+uv run ~/.claude/skills/evalhub/scripts/evalhub_logs.py JOB_ID
 ```
 
 ### Cancel a Job
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py JOB_ID --cancel
+uv run ~/.claude/skills/evalhub/scripts/evalhub_status.py JOB_ID --cancel
 ```
 
 ## Interpreting Results
@@ -187,7 +187,7 @@ uv run ~/.claude/skills/eval-hub/scripts/evalhub_status.py JOB_ID --cancel
 After a job completes, fetch the provider to read its agent metadata:
 
 ```bash
-uv run ~/.claude/skills/eval-hub/scripts/evalhub_providers.py PROVIDER_ID
+uv run ~/.claude/skills/evalhub/scripts/evalhub_providers.py PROVIDER_ID
 ```
 
 Use `agent.result_interpretation` to explain scores (metric direction, baselines, score ranges). Use `agent.complements` to suggest follow-up evaluations. Do not write custom code to process or filter the JSON — read the output directly.
