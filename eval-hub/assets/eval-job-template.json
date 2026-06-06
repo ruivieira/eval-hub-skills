@@ -1,0 +1,22 @@
+{
+  "name": "my-evaluation",
+  "description": "Evaluation description",
+  "model": {
+    "url": "http://model-server:8000/v1",
+    "name": "my-model"
+  },
+  "benchmarks": [
+    {
+      "id": "BENCHMARK_ID",
+      "provider_id": "PROVIDER_ID",
+      "parameters": {},
+      "pass_criteria": {
+        "threshold": 0.7
+      }
+    }
+  ],
+  "tags": ["experiment-v1"],
+  "experiment": {
+    "name": "my-experiment"
+  }
+}

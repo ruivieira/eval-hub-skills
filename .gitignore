@@ -1,0 +1,8 @@
+LOCAL.md
+__pycache__/
+*.pyc
+/.idea/.gitignore
+/.idea/eval-hub-skills.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
