@@ -88,6 +88,43 @@ When the user asks to evaluate something:
 - Use **individual benchmarks** when the user names a specific benchmark or wants a quick check
 - Collections have curated weights and pass thresholds — they represent expert-designed evaluation suites
 
+## MCP Mode (preferred)
+
+When the `evalhub` MCP server is connected (check `/mcp` — it appears when `EVALHUB_MCP_URL` is set and the server is reachable), use MCP tools and resources directly instead of Python scripts. MCP requires no `uv` or Python dependency and is lower latency.
+
+### When MCP is available: use these instead of Python scripts
+
+**Tools** (for write/action operations):
+
+| MCP Tool | Replaces |
+|----------|---------|
+| `submit_evaluation` | `evalhub_eval.py` |
+| `cancel_job` | `evalhub_status.py JOB_ID --cancel` |
+| `get_job_status` | `evalhub_status.py JOB_ID` |
+
+**Resources** (for discovery and read operations):
+
+| MCP Resource URI | Replaces |
+|------------------|---------|
+| `evalhub://providers` | `evalhub_providers.py --agent` |
+| `evalhub://providers/{id}` | `evalhub_providers.py PROVIDER_ID` |
+| `evalhub://benchmarks` | `evalhub_providers.py --benchmarks` |
+| `evalhub://benchmarks?label=safety` | `evalhub_providers.py --evaluates safety` |
+| `evalhub://collections` | `evalhub_collections.py --agent` |
+| `evalhub://collections/{id}` | `evalhub_collections.py COLLECTION_ID` |
+| `evalhub://jobs` | `evalhub_status.py --list` |
+| `evalhub://jobs?status=running` | `evalhub_status.py --list --status running` |
+| `evalhub://jobs/{id}` | `evalhub_status.py JOB_ID` |
+
+**Waiting for completion via MCP:** poll `get_job_status` until state is `completed`, `failed`, `cancelled`, or `partially_failed`. Do not invoke Python scripts for this.
+
+### When MCP is NOT available: fall back to Python scripts
+
+Use the Python scripts (documented in "Core Operations" below) when:
+- `EVALHUB_MCP_URL` is unset or the MCP server is unreachable
+- Fetching job logs — `evalhub_logs.py JOB_ID` (no MCP equivalent yet)
+- Health check — `evalhub_check.py` (no MCP equivalent; skip unless connectivity problems)
+
 ## Core Operations
 
 ### Check Health

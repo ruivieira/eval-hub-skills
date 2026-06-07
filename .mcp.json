@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "evalhub": {
+      "type": "http",
+      "url": "${EVALHUB_MCP_URL}"
+    }
+  }
+}
