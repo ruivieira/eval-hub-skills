@@ -1,0 +1,5 @@
+prompt: "Evaluate my model (http://model:8000/v1, named gpt2) using the healthcare_safety_v1 collection"
+skill: evalhub-eval
+context:
+  env_vars_set: true
+  known_collection_id: healthcare_safety_v1

@@ -1,0 +1,8 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_collections.py --evaluates"
+output_requirements:
+  - recommends a collection rather than individual benchmarks
+  - explains why this collection matches the user's intent using recommended_when
+  - reads agent.hints before suggesting submission parameters
+  - offers to proceed with submission (transitions to evalhub-eval skill)

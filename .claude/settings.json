@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run evalhub/scripts/*.py *)",
+      "Bash(uv run ~/.claude/skills/evalhub/scripts/*.py *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run evalhub/scripts/state.py status 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

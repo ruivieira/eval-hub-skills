@@ -1,0 +1,6 @@
+prompt: "Wait for job abc-123 to finish"
+skill: evalhub-jobs
+context:
+  env_vars_set: true
+  job_id: abc-123
+  job_expected_duration: long  # > 5 minutes

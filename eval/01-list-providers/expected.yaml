@@ -1,0 +1,11 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_providers.py --agent"
+    parallel_with: "evalhub_collections.py --agent"
+  - tool: Bash
+    command_contains: "evalhub_collections.py --agent"
+output_requirements:
+  - lists providers with id, name, evaluates tags
+  - lists collections with id, name, evaluates tags
+  - does not fetch individual providers after the parallel call
+  - does not hardcode any provider or benchmark IDs

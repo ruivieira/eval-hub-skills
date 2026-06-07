@@ -1,0 +1,4 @@
+prompt: "What evaluation providers are available?"
+skill: evalhub-discovery
+context:
+  env_vars_set: true

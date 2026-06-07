@@ -1,0 +1,7 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_eval.py --dry-run"
+output_requirements:
+  - prints request JSON without submitting
+  - does NOT save a job ID to state.py (no job was created)
+  - asks user to confirm before submitting for real

@@ -1,0 +1,6 @@
+rules:
+  context-budget:
+    warning: 4000
+    error: 8000
+  content-critical-position: info
+  agentskill-name: disabled

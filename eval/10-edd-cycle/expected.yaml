@@ -1,0 +1,20 @@
+steps:
+  - name: Define Criteria
+    tool_calls:
+      - command_contains: "evalhub_providers.py --evaluates safety"
+      - command_contains: "evalhub_collections.py --evaluates safety"
+    output:
+      - presents matched providers/collections with recommended_when
+      - reads hints to explain what parameters are needed
+  - name: Measure Scores
+    tool_calls:
+      - command_contains: "evalhub_eval.py"
+      - command_contains: "evalhub_status.py"
+    output:
+      - submits evaluation job
+      - waits for completion
+      - interprets results using result_interpretation metadata
+  - name: Iterate
+    output:
+      - suggests complement evaluations using complements metadata
+      - offers to re-run with adjusted parameters

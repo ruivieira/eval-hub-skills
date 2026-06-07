@@ -1,0 +1,5 @@
+prompt: "Cancel job abc-123"
+skill: evalhub-jobs
+context:
+  env_vars_set: true
+  job_id: abc-123

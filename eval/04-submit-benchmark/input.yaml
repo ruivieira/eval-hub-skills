@@ -1,0 +1,6 @@
+prompt: "Run benchmark arc_easy from provider lm_evaluation_harness on my model at http://vllm:8000/v1 named llama3"
+skill: evalhub-eval
+context:
+  env_vars_set: true
+  known_provider_id: lm_evaluation_harness
+  known_benchmark_id: arc_easy

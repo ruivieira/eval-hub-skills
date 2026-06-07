@@ -1,0 +1,7 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_providers.py --evaluates safety"
+output_requirements:
+  - only returns providers with safety in their evaluates list
+  - does not return all providers and filter in prose
+  - suggests a collection if one evaluates safety

@@ -31,3 +31,21 @@ jobs:
         run: sudo apt-get install -y shellcheck
       - name: Lint shell scripts
         run: shellcheck test-skill.sh
+
+  skills:
+    name: Skills (skillsaw)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install skillsaw
+        run: pip install skillsaw
+      - name: Lint SKILL.md files
+        run: |
+          skillsaw \
+            evalhub/SKILL.md \
+            evalhub-discovery/SKILL.md \
+            evalhub-eval/SKILL.md \
+            evalhub-jobs/SKILL.md

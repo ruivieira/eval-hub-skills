@@ -1,14 +1,15 @@
-SKILL_NAME := evalhub
-SKILL_DIR  := $(CURDIR)/$(SKILL_NAME)
-TARGET_DIR := $(HOME)/.claude/skills/$(SKILL_NAME)
+SKILL_NAMES := evalhub evalhub-discovery evalhub-eval evalhub-jobs
+SKILL_NAME  := evalhub
+SKILL_DIR   := $(CURDIR)/$(SKILL_NAME)
+TARGET_DIR  := $(HOME)/.claude/skills/$(SKILL_NAME)
 
-.PHONY: help install uninstall update check lint test
+.PHONY: help install install-all uninstall uninstall-all update update-all check lint test
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 
-install: ## Install the skill into ~/.claude/skills/ (symlink)
+install: ## Install the primary evalhub skill into ~/.claude/skills/ (symlink)
 	@if [ -e "$(TARGET_DIR)" ]; then \
 		echo "Error: $(TARGET_DIR) already exists. Use 'make update' or 'make uninstall' first."; \
 		exit 1; \
@@ -17,7 +18,20 @@ install: ## Install the skill into ~/.claude/skills/ (symlink)
 	@ln -s "$(SKILL_DIR)" "$(TARGET_DIR)"
 	@echo "Installed $(SKILL_NAME) → $(TARGET_DIR)"
 
-uninstall: ## Remove the skill from ~/.claude/skills/
+install-all: ## Install all skills (evalhub, evalhub-discovery, evalhub-eval, evalhub-jobs)
+	@mkdir -p "$(HOME)/.claude/skills"
+	@for skill in $(SKILL_NAMES); do \
+		src="$(CURDIR)/$$skill"; \
+		dst="$(HOME)/.claude/skills/$$skill"; \
+		if [ -e "$$dst" ]; then \
+			echo "Skip $$skill (already installed at $$dst)"; \
+		else \
+			ln -s "$$src" "$$dst"; \
+			echo "Installed $$skill → $$dst"; \
+		fi \
+	done
+
+uninstall: ## Remove the primary evalhub skill from ~/.claude/skills/
 	@if [ -L "$(TARGET_DIR)" ]; then \
 		rm "$(TARGET_DIR)"; \
 		echo "Removed symlink $(TARGET_DIR)"; \
@@ -28,12 +42,25 @@ uninstall: ## Remove the skill from ~/.claude/skills/
 		echo "Nothing to remove at $(TARGET_DIR)"; \
 	fi
 
-update: uninstall install ## Update the skill (re-link)
+uninstall-all: ## Remove all skills from ~/.claude/skills/
+	@for skill in $(SKILL_NAMES); do \
+		dst="$(HOME)/.claude/skills/$$skill"; \
+		if [ -L "$$dst" ]; then \
+			rm "$$dst"; echo "Removed symlink $$dst"; \
+		elif [ -d "$$dst" ]; then \
+			rm -rf "$$dst"; echo "Removed directory $$dst"; \
+		fi \
+	done
 
-lint: ## Lint Python scripts (ruff) and shell scripts (shellcheck)
+update: uninstall install ## Update the primary evalhub skill (re-link)
+
+update-all: uninstall-all install-all ## Update all skills (re-link)
+
+lint: ## Lint Python scripts (ruff), shell scripts (shellcheck), and SKILL.md files (skillsaw)
 	uvx ruff check evalhub/scripts/
 	uvx ruff format --check evalhub/scripts/
 	shellcheck test-skill.sh
+	uvx skillsaw evalhub/SKILL.md evalhub-discovery/SKILL.md evalhub-eval/SKILL.md evalhub-jobs/SKILL.md
 
 test: ## Run unit tests (no live service required)
 	pytest tests/ -v

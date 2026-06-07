@@ -1,0 +1,12 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_eval.py"
+    args_include:
+      - "--model-url http://vllm:8000/v1"
+      - "--model-name llama3"
+      - "--provider lm_evaluation_harness"
+      - "--benchmark arc_easy"
+output_requirements:
+  - extracts and reports the returned job ID
+  - saves job ID with state.py after submission
+  - offers to monitor job status

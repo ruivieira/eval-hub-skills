@@ -1,0 +1,4 @@
+prompt: "I want to iteratively evaluate my model for safety. Help me run EDD."
+skill: evalhub
+context:
+  env_vars_set: true

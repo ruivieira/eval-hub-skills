@@ -1,0 +1,4 @@
+prompt: "Show me what the evaluation request would look like before submitting. Model: http://vllm:8000/v1, name: llama3, benchmark: arc_easy, provider: lm_evaluation_harness"
+skill: evalhub-eval
+context:
+  env_vars_set: true

@@ -1,0 +1,7 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_status.py abc-123"
+output_requirements:
+  - reports the current state (pending/running/completed/failed/cancelled/partially_failed)
+  - if state is terminal, offers to fetch results or suggest next steps
+  - if state is running, offers to wait or check again later

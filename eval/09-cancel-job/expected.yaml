@@ -1,0 +1,6 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_status.py abc-123 --cancel"
+output_requirements:
+  - confirms cancellation result from the API response
+  - clears state.py job_id after successful cancel

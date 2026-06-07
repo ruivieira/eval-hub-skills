@@ -1,0 +1,10 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "state.py set job_id abc-123"
+  - tool: Bash
+    command_contains: "evalhub_status.py abc-123"
+output_requirements:
+  - saves job ID to state.py before polling (compression resilience)
+  - uses --wait or polls get_job_status at reasonable interval
+  - reports final state when job reaches terminal
+  - clears state.py job_id after terminal state

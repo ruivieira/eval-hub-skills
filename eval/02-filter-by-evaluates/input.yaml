@@ -1,0 +1,4 @@
+prompt: "Which providers can evaluate safety?"
+skill: evalhub-discovery
+context:
+  env_vars_set: true

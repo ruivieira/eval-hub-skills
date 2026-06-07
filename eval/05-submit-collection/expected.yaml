@@ -1,0 +1,11 @@
+tool_calls:
+  - tool: Bash
+    command_contains: "evalhub_eval.py"
+    args_include:
+      - "--model-url http://model:8000/v1"
+      - "--model-name gpt2"
+      - "--collection healthcare_safety_v1"
+output_requirements:
+  - does NOT include --provider or --benchmark flags
+  - saves job ID with state.py
+  - offers to monitor status

@@ -1,0 +1,4 @@
+prompt: "I want to do a comprehensive evaluation of my model for healthcare safety."
+skill: evalhub-discovery
+context:
+  env_vars_set: true

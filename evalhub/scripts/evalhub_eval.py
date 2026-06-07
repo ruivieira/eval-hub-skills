@@ -38,9 +38,10 @@ def main() -> None:
     parser.add_argument("--threshold", type=float, help="Pass/fail threshold (0.0-1.0)")
     parser.add_argument("--experiment-name", help="MLflow experiment name")
     parser.add_argument("--queue", help="Kueue queue name for job scheduling")
+    parser.add_argument("--dry-run", action="store_true", help="Print request JSON without submitting")
     args = parser.parse_args()
 
-    client = get_client()
+    client = get_client() if not args.dry_run else None
 
     if args.json_file:
         with open(args.json_file) as f:
@@ -110,7 +111,12 @@ def main() -> None:
             queue=queue,
         )
 
-    job = client.jobs.submit(request)
+    if args.dry_run:
+        data = request.model_dump() if hasattr(request, "model_dump") else vars(request)
+        print(json.dumps(data, indent=2, default=str))
+        return
+
+    job = client.jobs.submit(request)  # type: ignore[union-attr]
     result = job.model_dump() if hasattr(job, "model_dump") else vars(job)
     print(json.dumps(result, indent=2, default=str))
 
