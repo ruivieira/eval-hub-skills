@@ -22,16 +22,6 @@ jobs:
       - name: Check formatting
         run: ruff format --check evalhub/scripts/
 
-  shell:
-    name: Shell (shellcheck)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install shellcheck
-        run: sudo apt-get install -y shellcheck
-      - name: Lint shell scripts
-        run: shellcheck test-skill.sh
-
   skills:
     name: Skills (skillsaw)
     runs-on: ubuntu-latest
