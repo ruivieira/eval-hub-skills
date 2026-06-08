@@ -53,6 +53,21 @@ make install
 
 Changes to the skill source are reflected immediately without reinstalling.
 
+### Connect to an MCP server on a cluster
+
+If EvalHub exposes an MCP server on your cluster, you can register it directly with Claude Code using the `claude mcp add` CLI command. EvalHub's MCP requires a bearer token and an `x-tenant` header (the namespace):
+
+```bash
+claude mcp add evalhub "$EVALHUB_BASE_URL/mcp" \
+  --transport http \
+  --header "Authorization: Bearer $EVALHUB_TOKEN" \
+  --header "x-tenant: $EVALHUB_TENANT"
+```
+
+This writes the server into your local Claude Code config (`.claude/settings.json`). Use `--scope user` to register it globally across all projects instead.
+
+> **Note:** OpenShift tokens expire. If you get 401 errors, refresh with `export EVALHUB_TOKEN="$(oc whoami -t)"` and re-run the command.
+
 ### Uninstall
 
 ```bash

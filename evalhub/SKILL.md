@@ -12,11 +12,12 @@ All provider and collection knowledge comes from the API at runtime. Do not hard
 
 ## Rules
 
-- **Use ONLY the provided scripts** — never write custom Python, jq, or inline code to process results. The scripts already format output correctly.
-- **Minimise API calls** — one round of two parallel calls (`--agent` for providers + collections) gives you ALL agent metadata. Do not fetch individual providers afterwards — the `--agent` output already contains the full agent block for every provider. Only fetch a single provider when the user explicitly asks for its benchmark list.
+- **Prefer MCP over scripts** — if the `evalhub` MCP server is connected (its tools appear as `mcp__evalhub__*`), use MCP tools and resources for all operations. Fall back to Python scripts only when MCP is unavailable or for operations with no MCP equivalent (logs, health check).
+- **Use ONLY the provided scripts when not using MCP** — never write custom Python, jq, or inline code to process results. The scripts already format output correctly.
+- **Minimise API calls** — one round of two parallel reads (`evalhub://providers` + `evalhub://collections` via MCP, or `--agent` scripts) gives you ALL agent metadata. Do not fetch individual providers afterwards.
 - **No health check** — skip `evalhub_check.py` unless the user reports connectivity problems.
 - **Suppress stderr** — always append `2>/dev/null` to script invocations to hide TLS and SDK diagnostic output.
-- **Be concise** — answer the user's question directly using the agent metadata from the `--agent` output. Do not narrate each script invocation.
+- **Be concise** — answer the user's question directly. Do not narrate each tool or script invocation.
 
 ## Prerequisites
 
@@ -90,40 +91,35 @@ When the user asks to evaluate something:
 
 ## MCP Mode (preferred)
 
-When the `evalhub` MCP server is connected (check `/mcp` — it appears when `EVALHUB_MCP_URL` is set and the server is reachable), use MCP tools and resources directly instead of Python scripts. MCP requires no `uv` or Python dependency and is lower latency.
+When the `evalhub` MCP server is connected, its tools are available as `mcp__evalhub__*` in the tool list. **Always prefer MCP over Python scripts** — it requires no `uv` or Python and is lower latency.
 
-### When MCP is available: use these instead of Python scripts
+### MCP tools (write/action operations)
 
-**Tools** (for write/action operations):
+| Tool | Purpose | Replaces |
+|------|---------|---------|
+| `mcp__evalhub__submit_evaluation` | Submit a new evaluation job | `evalhub_eval.py` |
+| `mcp__evalhub__get_job_status` | Get job status and progress | `evalhub_status.py JOB_ID` |
+| `mcp__evalhub__cancel_job` | Cancel a running or pending job | `evalhub_status.py JOB_ID --cancel` |
 
-| MCP Tool | Replaces |
-|----------|---------|
-| `submit_evaluation` | `evalhub_eval.py` |
-| `cancel_job` | `evalhub_status.py JOB_ID --cancel` |
-| `get_job_status` | `evalhub_status.py JOB_ID` |
+### MCP resources (discovery and read operations)
 
-**Resources** (for discovery and read operations):
+Use `ReadMcpResourceTool` with server `evalhub`:
 
-| MCP Resource URI | Replaces |
-|------------------|---------|
+| URI | Replaces |
+|-----|---------|
 | `evalhub://providers` | `evalhub_providers.py --agent` |
-| `evalhub://providers/{id}` | `evalhub_providers.py PROVIDER_ID` |
 | `evalhub://benchmarks` | `evalhub_providers.py --benchmarks` |
-| `evalhub://benchmarks?label=safety` | `evalhub_providers.py --evaluates safety` |
 | `evalhub://collections` | `evalhub_collections.py --agent` |
-| `evalhub://collections/{id}` | `evalhub_collections.py COLLECTION_ID` |
 | `evalhub://jobs` | `evalhub_status.py --list` |
-| `evalhub://jobs?status=running` | `evalhub_status.py --list --status running` |
-| `evalhub://jobs/{id}` | `evalhub_status.py JOB_ID` |
+| `evalhub://server-version` | — |
 
-**Waiting for completion via MCP:** poll `get_job_status` until state is `completed`, `failed`, `cancelled`, or `partially_failed`. Do not invoke Python scripts for this.
+**Waiting for completion via MCP:** poll `mcp__evalhub__get_job_status` until state is `completed`, `failed`, `cancelled`, or `partially_failed`.
 
-### When MCP is NOT available: fall back to Python scripts
+### Fall back to Python scripts when
 
-Use the Python scripts (documented in "Core Operations" below) when:
-- `EVALHUB_MCP_URL` is unset or the MCP server is unreachable
+- MCP is not connected (`mcp__evalhub__*` tools are absent from the tool list)
 - Fetching job logs — `evalhub_logs.py JOB_ID` (no MCP equivalent yet)
-- Health check — `evalhub_check.py` (no MCP equivalent; skip unless connectivity problems)
+- Health check — `evalhub_check.py` (skip unless the user reports connectivity problems)
 
 ## Core Operations
 
